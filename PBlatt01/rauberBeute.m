@@ -2,7 +2,7 @@
 %which is based on the Lotka Voltera equations
 
 
-T = 25;                                 %Endzeit
+T = 20;                                 %Endzeit
 tau = [0.64, 0.32, 0.16, 0.08 0.04];    %Zeitschritte
 y0 = [0.5, 0.5];                        %Startvektor
 
