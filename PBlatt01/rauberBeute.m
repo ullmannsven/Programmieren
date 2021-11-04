@@ -4,7 +4,7 @@
 
 T = 20;                                 %Endzeit
 tau = [0.64, 0.32, 0.16, 0.08 0.04];    %Zeitschritte
-y0 = [0.5, 0.5];                        %Startvektor
+y0 = [0.5, 0.5] %Startvektor
 
 %Steps etc.
 meshstep = 0.5;                         %Gitterbreite für Vektorfeld
