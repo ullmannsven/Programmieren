@@ -1,0 +1,708 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Abgabe_Ullmann_Stegmeyer</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2021-11-22"><meta name="DC.source" content="Abgabe_Ullmann_Stegmeyer.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1></h1><!--introduction--><p>Abgabe des ersten Programmierblatts von Sven Ullmann (3467077) und Thomas Stegmeyer (3401787)</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Aufgabe 1</a></li><li><a href="#9">Aufgabe 2</a></li><li><a href="#36">Aufgabe 3</a></li></ul></div><h2 id="1">Aufgabe 1</h2><p>Definition einiger numerischer Verfahrung zur approximation von DGLs</p><p>Das explizite Verfahren von Euler</p><pre class="codeinput">type <span class="string">'explicit_euler.m'</span>
+</pre><pre class="codeoutput">
+
+function Y = explicit_euler(f, y_0, T, tau)
+K = round(T/tau);   %Anzahl an Zeitschritten
+d = size(y_0);      %Dimension des Startvektors und damit auch die der L&ouml;sung 
+d = d(2);
+Y = zeros(d,K+1);   %Initialisieren Matrix, in welcher alles L&ouml;sungsvektoren gespeichert werden
+Y(:,1) = y_0;       %Startwert y_0 zur L&ouml;sungmatrix hinzuf&uuml;gen
+
+%Durchf&uuml;hren des Euler Schritts
+for i=1:K
+    Y(:,i+1) = Y(:,i) + tau*f(tau*i,Y(:,i));
+end  
+
+end
+
+</pre><p>Das explizite Verfahren von Heun</p><pre class="codeinput">type <span class="string">'explicit_heun.m'</span>
+</pre><pre class="codeoutput">
+function Y = explicit_heun(f, y_0, T, tau)
+
+K = round(T/tau); %Anzahl Zeitschritte
+d = size(y_0);    %Dimension des Eingabevektors
+d = d(2);          
+Y = zeros(d,K+1); %Initialisiere leere Matrix, um alle L&ouml;sungsvektoren zu speichern
+Y(:,1) = y_0;     %Speichern des ersten L&ouml;sungsvektors
+
+%Durchf&uuml;hren des Heun Verfahrens 
+for i=1:K
+    g0 = f(tau*i, Y(:,i));
+    g1 = f(tau*(i+1), Y(:,i) + tau*f(tau*i, Y(:,i)));
+    Y(:,i+1) = Y(:,i) + (tau/2)*(g0 + g1);
+end 
+
+   
+
+end
+
+</pre><p>Das explizite Runge Kutta Verfahren dritter Ordnung</p><pre class="codeinput">type <span class="string">'explicit_runge_kutta3.m'</span>
+</pre><pre class="codeoutput">
+function Y = explicit_runge_kutta3(f, y_0, T, tau)
+
+A = [0 0 0; 0.5 0 0; -1 2 0];
+b = [0 1/2 1];
+c = [1/6 2/3 1/6];
+
+K = round(T/tau); %Anzahl Zeitschritte
+d = size(y_0);    %Dimension des Eingabevektors
+d = d(2);          
+Y = zeros(d,K+1); %Initialisiere leere Matrix, um alle L&ouml;sungsvektoren zu speichern
+Y(:,1) = y_0;     %Speichern des ersten L&ouml;sungsvektors
+
+s = size(b);
+s = s(2);
+V = zeros(d,s);
+
+for k=1:K
+    V(:,1) = Y(:,k);
+    for i = 2:s
+        for j=1:i-1
+            sum1 = A(i,j)*f(tau*k + c(j)*tau,V(:,j));
+        end 
+    V(:,i+1) = Y(:,k) + tau*sum1;
+    end 
+    
+    for j=1:s
+        sum2 = b(j)*f(tau*k + c(j)*tau, V(:,j));
+    end 
+    
+    Y(:,k+1) = Y(:,k) + tau*sum2;
+end 
+
+end
+
+</pre><h2 id="9">Aufgabe 2</h2><p>Diese Aufgabe l&ouml;st die DGL des R&auml;uber Beute Modells</p><pre class="codeinput">type <span class="string">'RauberBeuteModell'</span>
+</pre><pre class="codeoutput">
+
+function f = RauberBeuteModell(~,y)
+    f = zeros(2,1);
+    
+    %Parameter
+    alpha = 1;
+    beta = 1;
+    gamma = 1;
+    delta = 1;
+    
+    %Die Modellgleichungen
+    f(1) = (alpha - beta*y(2))*y(1);
+    f(2) = ( - gamma + delta*y(1))*y(2);
+end
+</pre><p>Definiere Endzeit, Zeitschritte, Startvektor und Gitter f&uuml;rs Vektorfeld</p><pre class="codeinput">T = 20;
+tau = [0.64, 0.32, 0.16, 0.08 0.04];
+y0 = [0.5, 0.5];
+meshstep = 0.5;
+axisRange = 5;
+steps = axisRange/meshstep + 1;
+F = zeros(steps,steps,2);
+[x,y] = meshgrid(0:meshstep:axisRange, 0:meshstep:axisRange);   <span class="comment">%Gitter f&uuml;r Vektorfeld</span>
+</pre><p>F&uuml;r die 2 gr&ouml;&szlig;ten Zeitschritte divergiert das Verfahren von Euler in der ersten Iteration. Deshalb werden diese getrennt geplottet.</p><pre class="codeinput"><span class="keyword">for</span> k=1:2
+</pre><pre class="codeinput">        <span class="comment">% L&ouml;sung DGL mit allen drei Verfahren</span>
+
+        K = round(T/tau(k));
+
+        sol_euler = explicit_euler(@RauberBeuteModell, y0, T, tau(k));
+        sol_heun = explicit_heun(@RauberBeuteModell, y0, T, tau(k));
+        sol_rk3 = explicit_runge_kutta3(@RauberBeuteModell, y0, T, tau(k));
+</pre><pre class="codeinput">        <span class="comment">% Berechne das Vektorfeld</span>
+
+        <span class="keyword">for</span> i=0:steps-1
+           <span class="keyword">for</span> j = 0:steps-1
+                F(i+1,j+1,:) = RauberBeuteModell(0,[meshstep*i,meshstep*j]);
+           <span class="keyword">end</span>
+        <span class="keyword">end</span>
+</pre><p>plot des Vektorfeld und der L&ouml;sungskurve f&uuml;r Euler</p><pre class="codeinput">        figure
+        hold <span class="string">on</span>
+        quiver(x,y,F(:,:,1).',F(:,:,2).')
+        plot(sol_euler(1,:), sol_euler(2,:))
+        xlabel(<span class="string">'Beute'</span>)
+        ylabel(<span class="string">'R&auml;uber'</span>)
+        legend(<span class="string">'Vektorfeld'</span>, <span class="string">'Euler'</span>)
+        title(<span class="string">"Timestep: "</span> + tau(k)+ <span class="string">" seconds"</span>);
+        hold <span class="string">off</span>
+</pre><img vspace="5" hspace="5" src="Abgabe_Ullmann_Stegmeyer_01.png" alt=""> <img vspace="5" hspace="5" src="Abgabe_Ullmann_Stegmeyer_05.png" alt=""> <p>plot der L&ouml;sungskurven &uuml;ber die Zeit, berechnet mit Euler</p><pre class="codeinput">        figure
+        time = linspace(0,T,K+1);
+        plot(time, sol_euler(1,:))
+        hold <span class="string">on</span>
+        plot(time, sol_euler(2,:))
+        legend(<span class="string">'Beute Euler'</span>, <span class="string">'Rauber Euler'</span>)
+        xlabel(<span class="string">'Zeit'</span>)
+        ylabel(<span class="string">'Bestand'</span>)
+        title(<span class="string">"R&auml;uber-Beute Zeitverlauf, Zeitschritt: "</span> + tau(k) + <span class="string">" seconds"</span>)
+        hold <span class="string">off</span>
+</pre><img vspace="5" hspace="5" src="Abgabe_Ullmann_Stegmeyer_02.png" alt=""> <img vspace="5" hspace="5" src="Abgabe_Ullmann_Stegmeyer_06.png" alt=""> <p>plot des Vektorfeld und der L&ouml;sungskurven f&uuml;r Heun und RK3</p><pre class="codeinput">        figure
+        hold <span class="string">on</span>
+        quiver(x,y,F(:,:,1).',F(:,:,2).')
+
+        plot(sol_heun(1,:), sol_heun(2,:), <span class="string">'g'</span>)
+        plot(sol_rk3(1,:), sol_rk3(2,:))
+        xlabel(<span class="string">'Beute'</span>)
+        ylabel(<span class="string">'R&auml;uber'</span>)
+        legend(<span class="string">'Vektorfeld'</span>, <span class="string">'Heun'</span>, <span class="string">'RK3'</span>)
+        title(<span class="string">"Timestep: "</span> + tau(k)+ <span class="string">" seconds"</span>);
+        hold <span class="string">off</span>
+</pre><img vspace="5" hspace="5" src="Abgabe_Ullmann_Stegmeyer_03.png" alt=""> <img vspace="5" hspace="5" src="Abgabe_Ullmann_Stegmeyer_07.png" alt=""> <p>plot des Beute und R&auml;uber Verlaufs jeweils &uuml;ber die Zeit, berechnet mit Heun und RK3</p><pre class="codeinput">        figure
+        time = linspace(0,T,K+1);
+        plot(time, sol_heun(1,:), <span class="string">'g'</span>)
+        hold <span class="string">on</span>
+        plot(time, sol_heun(2,:), <span class="string">'b'</span>)
+        plot(time, sol_rk3(1,:), <span class="string">'r'</span>)
+        plot(time, sol_rk3(2,:), <span class="string">'k'</span>)
+
+        legend(<span class="string">'Beute Heun'</span>, <span class="string">'Rauber Heun'</span>, <span class="string">'Beute RK3'</span>, <span class="string">'Rauber RK3'</span>)
+        xlabel(<span class="string">'Zeit'</span>)
+        ylabel(<span class="string">'Bestand'</span>)
+        title(<span class="string">"R&auml;uber-Beute Zeitverlauf, Zeitschritt: "</span> + tau(k) + <span class="string">" seconds"</span>)
+        hold <span class="string">off</span>
+</pre><img vspace="5" hspace="5" src="Abgabe_Ullmann_Stegmeyer_04.png" alt=""> <img vspace="5" hspace="5" src="Abgabe_Ullmann_Stegmeyer_08.png" alt=""> <pre class="codeinput"> <span class="keyword">end</span>
+</pre><p>Schleife &uuml;ber Zeitschritte ab <img src="Abgabe_Ullmann_Stegmeyer_eq17768173688802194544.png" alt="$$ \tau = 0.16$" style="width:53px;height:11px;"> und kleiner f&uuml;r alle 3 Verfahren</p><pre class="codeinput"> <span class="keyword">for</span> k=3:length(tau)
+</pre><pre class="codeinput">        <span class="comment">% L&ouml;sung DGL mit allen drei Verfahren</span>
+
+        K = round(T/tau(k));
+
+        sol_euler = explicit_euler(@RauberBeuteModell, y0, T, tau(k));
+        sol_heun = explicit_heun(@RauberBeuteModell, y0, T, tau(k));
+        sol_rk3 = explicit_runge_kutta3(@RauberBeuteModell, y0, T, tau(k));
+
+
+        <span class="comment">% Berechne das Vektorfeld</span>
+
+        <span class="keyword">for</span> i=0:steps-1
+           <span class="keyword">for</span> j = 0:steps-1
+                F(i+1,j+1,:) = RauberBeuteModell(0,[meshstep*i,meshstep*j]);
+           <span class="keyword">end</span>
+        <span class="keyword">end</span>
+</pre><p>plot des Vektorfeld und der L&ouml;sungskurven</p><pre class="codeinput">        figure
+        hold <span class="string">on</span>
+        quiver(x,y,F(:,:,1).',F(:,:,2).')
+        plot(sol_euler(1,:), sol_euler(2,:), <span class="string">'k'</span>)
+        plot(sol_heun(1,:), sol_heun(2,:), <span class="string">'g'</span>)
+        plot(sol_rk3(1,:), sol_rk3(2,:))
+        xlabel(<span class="string">'Beute'</span>)
+        ylabel(<span class="string">'R&auml;uber'</span>)
+        legend(<span class="string">'Vektorfeld'</span>, <span class="string">'Euler'</span>, <span class="string">'Heun'</span>, <span class="string">'RK3'</span>)
+        title(<span class="string">"Timestep: "</span> + tau(k)+ <span class="string">" seconds"</span>);
+        hold <span class="string">off</span>
+</pre><img vspace="5" hspace="5" src="Abgabe_Ullmann_Stegmeyer_09.png" alt=""> <img vspace="5" hspace="5" src="Abgabe_Ullmann_Stegmeyer_11.png" alt=""> <img vspace="5" hspace="5" src="Abgabe_Ullmann_Stegmeyer_13.png" alt=""> <p>plot des Beute und R&auml;uber Verlaufs jeweils &uuml;ber die Zeit</p><pre class="codeinput">        figure
+        time = linspace(0,T,K+1);
+        plot(time,sol_euler(1,:), <span class="string">'k'</span>)
+        hold <span class="string">on</span>
+        plot(time, sol_euler(2,:), <span class="string">'b'</span>)
+        plot(time, sol_heun(1,:), <span class="string">'g'</span>)
+        plot(time, sol_heun(2,:), <span class="string">'m'</span>)
+        plot(time, sol_rk3(1,:), <span class="string">'r'</span>)
+        plot(time, sol_rk3(2,:))
+
+        legend(<span class="string">'Beute Euler'</span>,<span class="string">'Rauber Euler'</span>, <span class="string">'Beute Heun'</span>, <span class="string">'Rauber Heun'</span>, <span class="string">'Beute RK3'</span>, <span class="string">'Rauber RK3'</span>)
+        xlabel(<span class="string">'Zeit'</span>)
+        ylabel(<span class="string">'Bestand'</span>)
+        title(<span class="string">"R&auml;uber-Beute Zeitverlauf, Zeitschritt: "</span> + tau(k) + <span class="string">" seconds"</span>)
+        hold <span class="string">off</span>
+</pre><img vspace="5" hspace="5" src="Abgabe_Ullmann_Stegmeyer_10.png" alt=""> <img vspace="5" hspace="5" src="Abgabe_Ullmann_Stegmeyer_12.png" alt=""> <img vspace="5" hspace="5" src="Abgabe_Ullmann_Stegmeyer_14.png" alt=""> <pre class="codeinput"> <span class="keyword">end</span>
+</pre><p>c) Was stellt man fest? Euler diviergiert f&uuml;r die zwei gr&ouml;&szlig;ten Zeitschrittweiten sehr schnell. Euler zeigt wachsenden Kreise (wie in VL gezeigt) Heun und RK3 sind geschlossene Kreise f&uuml;r gen&uuml;gend kleine Zeitschrittweiten, also wesentlich besser als Euler! Die Erkenntnisse stimmen auch mit den besseren Konsistenzordnungen von Heun und RK3 &uuml;berein.</p><h2 id="36">Aufgabe 3</h2><p>F&uuml;r Aufgabe 3 l&ouml;sen wir die logistische DGL</p><pre class="codeinput">type <span class="string">'funcLogisticDGL.m'</span>
+</pre><pre class="codeoutput">
+function x = funcLogisticDGL(~,y)
+    %parameter
+    alpha = 10;
+    beta = 1;
+    
+    %logistische DGL
+    x = alpha*y - beta*(y^2);
+end
+
+</pre><p>Definiere Zeitschritte, Parameter und Startwerte</p><pre class="codeinput">tau_c = 1/80 * [1, 1/2, 1/8, 1/16, 1/32, 1/64, 1/128, 1/258, 1/512];
+t_0 = 0;
+T = 1;
+alpha = 10;
+beta = 1;
+Xi = alpha / beta;
+p_0 = 1;
+</pre><p>Initialisere leere Arrays um Fehler und Zeit zu speichern</p><pre class="codeinput">cpuTime_euler = zeros(1,length(tau_c));
+cpuTime_heun = zeros(1,length(tau_c));
+cpuTime_rk3 = zeros(1,length(tau_c));
+maxErrors_euler = zeros(1,length(tau_c));
+maxErrors_heun = zeros(1,length(tau_c));
+maxErrors_rk3 = zeros(1,length(tau_c));
+</pre><p>Die exakte L&ouml;sung</p><pre class="codeinput">AnalyticSol = @(t) Xi*p_0/(p_0 + (Xi - p_0)*exp(-alpha*(t - t_0)));
+</pre><p>Schleife &uuml;ber alle Zeitschritte, berechne jeweils maxError und CPUTime</p><pre class="codeinput"><span class="keyword">for</span> i=1:length(tau_c)
+
+        K = round(T/tau_c(i));
+
+        <span class="comment">% Initialisere und f&uuml;lle Array, um die analytische L&ouml;sung zu speichern</span>
+
+        AnalyticSolVal = zeros(1,K+1);
+        <span class="keyword">for</span> j=1:K+1
+            AnalyticSolVal(j) = AnalyticSol(tau_c(i)*(j-1));
+        <span class="keyword">end</span>
+
+        <span class="comment">% F&uuml;hre die Zeitmessung durch</span>
+        tic;
+        sol_euler = explicit_euler(@funcLogisticDGL, p_0, T, tau_c(i));
+        cpuTime_euler(i) = toc;
+
+        tic;
+        sol_heun = explicit_heun(@funcLogisticDGL, p_0, T, tau_c(i));
+        cpuTime_heun(i) = toc;
+
+        tic;
+        sol_rk3 = explicit_runge_kutta3(@funcLogisticDGL, p_0, T, tau_c(i));
+        cpuTime_rk3(i) = toc;
+
+        <span class="comment">% Berechne die Fehler zu jedem Zeitpunkt und bestimme das Maximum</span>
+        errors_euler = zeros(1,K+1);
+        errors_heun = zeros(1,K+1);
+        errors_rk3 = zeros(1,K+1);
+
+        <span class="keyword">for</span> j=1:K+1
+            errors_euler(j) = abs(AnalyticSolVal(j) - sol_euler(j));
+            errors_heun(j) = abs(AnalyticSolVal(j) - sol_heun(j));
+            errors_rk3(j) = abs(AnalyticSolVal(j) - sol_rk3(j));
+        <span class="keyword">end</span>
+
+        <span class="comment">%gr&ouml;&szlig;ten Fehler finden</span>
+
+        maxErrors_euler(i) = max(errors_euler);
+        maxErrors_heun(i) = max(errors_heun);
+        maxErrors_rk3(i) = max(errors_rk3);
+
+
+<span class="keyword">end</span>
+</pre><p>plot maxError over timestep for all three methods</p><pre class="codeinput">figure
+loglog(tau_c,maxErrors_euler, <span class="string">'-o'</span>)
+hold <span class="string">on</span>
+loglog(tau_c,maxErrors_heun, <span class="string">'-o'</span>)
+loglog(tau_c,maxErrors_rk3, <span class="string">'-o'</span>)
+
+xlabel(<span class="string">'timestep'</span>)
+ylabel(<span class="string">'error'</span>)
+legend(<span class="string">'Euler'</span>, <span class="string">'Heun'</span>, <span class="string">'RK3'</span>)
+title(<span class="string">'error to analytic solution over timestep'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="5" hspace="5" src="Abgabe_Ullmann_Stegmeyer_15.png" alt=""> <p>plot MaxError over CPU Time for all three methods</p><pre class="codeinput">figure
+semilogy(cpuTime_euler, maxErrors_euler, <span class="string">'-o'</span>)
+hold <span class="string">on</span>
+semilogy(cpuTime_heun, maxErrors_heun, <span class="string">'-o'</span>)
+semilogy(cpuTime_rk3, maxErrors_rk3, <span class="string">'-o'</span>)
+xlabel(<span class="string">'cpuTime'</span>)
+ylabel(<span class="string">'error'</span>)
+legend(<span class="string">'Euler'</span>, <span class="string">'Heun'</span>, <span class="string">'RK3'</span>)
+title(<span class="string">'error to analytical solution over cpu runtime'</span>)
+hold <span class="string">off</span>
+</pre><img vspace="5" hspace="5" src="Abgabe_Ullmann_Stegmeyer_16.png" alt=""> <p>d) Interpretation der Ergebnisse Mit gr&ouml;&szlig;eren Zeitschrittweite wird Fehler zur analytischen L&ouml;sung bei allen 3 Verfahren gr&ouml;&szlig;er. Rk3 besser als Heun besser als Euler Euler ist am schnellsten, macht aber auch den gr&ouml;&szlig;ten Fehler. Heun und RK3 sind selber Laufzeit wie Euler deutlich besser im Fehler. Heun und RK3 unterscheiden sind kaum beim CpuTime &uuml;ber Laufzeit plot.</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% 
+% Abgabe des ersten Programmierblatts von Sven Ullmann (3467077) und Thomas
+% Stegmeyer (3401787)
+
+%% Aufgabe 1
+%
+% Definition einiger numerischer Verfahrung zur approximation von DGLs
+
+%%
+% Das explizite Verfahren von Euler
+%%
+type 'explicit_euler.m'
+
+%%
+% Das explizite Verfahren von Heun
+%%
+
+type 'explicit_heun.m'
+
+%%
+% Das explizite Runge Kutta Verfahren dritter Ordnung 
+%%
+
+type 'explicit_runge_kutta3.m'
+
+%%
+
+%% Aufgabe 2 
+%
+% Diese Aufgabe löst die DGL des Räuber Beute Modells
+%%
+
+type 'RauberBeuteModell' 
+
+%% 
+%
+% Definiere Endzeit, Zeitschritte, Startvektor und Gitter fürs Vektorfeld
+%%
+
+T = 20;                                
+tau = [0.64, 0.32, 0.16, 0.08 0.04];    
+y0 = [0.5, 0.5]; 
+meshstep = 0.5;                         
+axisRange = 5;                         
+steps = axisRange/meshstep + 1;    
+F = zeros(steps,steps,2);
+[x,y] = meshgrid(0:meshstep:axisRange, 0:meshstep:axisRange);   %Gitter für Vektorfeld
+
+%%
+% 
+% Für die 2 größten Zeitschritte divergiert das Verfahren von Euler in der
+% ersten Iteration. Deshalb werden diese getrennt geplottet.
+%%
+
+for k=1:2
+     
+        %%
+        
+        % Lösung DGL mit allen drei Verfahren
+     
+        K = round(T/tau(k));    
+    
+        sol_euler = explicit_euler(@RauberBeuteModell, y0, T, tau(k));
+        sol_heun = explicit_heun(@RauberBeuteModell, y0, T, tau(k));
+        sol_rk3 = explicit_runge_kutta3(@RauberBeuteModell, y0, T, tau(k));
+       
+
+        %%
+        
+        % Berechne das Vektorfeld
+        
+        for i=0:steps-1
+           for j = 0:steps-1
+                F(i+1,j+1,:) = RauberBeuteModell(0,[meshstep*i,meshstep*j]);
+           end 
+        end 
+        
+        %%
+        % plot des Vektorfeld und der Lösungskurve für Euler
+        %%
+        
+        figure
+        hold on
+        quiver(x,y,F(:,:,1).',F(:,:,2).')
+        plot(sol_euler(1,:), sol_euler(2,:))
+        xlabel('Beute')
+        ylabel('Räuber')
+        legend('Vektorfeld', 'Euler')
+        title("Timestep: " + tau(k)+ " seconds");
+        hold off
+        
+        %%
+        % plot der Lösungskurven über die Zeit, berechnet mit Euler
+        %
+        %%
+        
+        figure 
+        time = linspace(0,T,K+1);
+        plot(time, sol_euler(1,:))
+        hold on
+        plot(time, sol_euler(2,:))
+        legend('Beute Euler', 'Rauber Euler')
+        xlabel('Zeit')
+        ylabel('Bestand')
+        title("Räuber-Beute Zeitverlauf, Zeitschritt: " + tau(k) + " seconds")
+        hold off
+        
+        %%
+        % plot des Vektorfeld und der Lösungskurven für Heun und RK3
+        %
+        %%
+        figure
+        hold on
+        quiver(x,y,F(:,:,1).',F(:,:,2).')
+ 
+        plot(sol_heun(1,:), sol_heun(2,:), 'g')
+        plot(sol_rk3(1,:), sol_rk3(2,:))
+        xlabel('Beute')
+        ylabel('Räuber')
+        legend('Vektorfeld', 'Heun', 'RK3')
+        title("Timestep: " + tau(k)+ " seconds");
+        hold off
+
+        %%
+        % plot des Beute und Räuber Verlaufs jeweils über die Zeit,
+        % berechnet mit Heun und RK3
+        %%
+        
+        figure 
+        time = linspace(0,T,K+1);
+        plot(time, sol_heun(1,:), 'g')
+        hold on
+        plot(time, sol_heun(2,:), 'b')
+        plot(time, sol_rk3(1,:), 'r')
+        plot(time, sol_rk3(2,:), 'k')
+        
+        legend('Beute Heun', 'Rauber Heun', 'Beute RK3', 'Rauber RK3')
+        xlabel('Zeit')
+        ylabel('Bestand')
+        title("Räuber-Beute Zeitverlauf, Zeitschritt: " + tau(k) + " seconds")
+        hold off
+ end 
+
+%%
+%
+% Schleife über Zeitschritte ab $$ \tau = 0.16$ und kleiner für alle 3
+% Verfahren
+%%
+
+ for k=3:length(tau)
+     
+        % Lösung DGL mit allen drei Verfahren
+     
+        K = round(T/tau(k));    
+    
+        sol_euler = explicit_euler(@RauberBeuteModell, y0, T, tau(k));
+        sol_heun = explicit_heun(@RauberBeuteModell, y0, T, tau(k));
+        sol_rk3 = explicit_runge_kutta3(@RauberBeuteModell, y0, T, tau(k));
+       
+
+        % Berechne das Vektorfeld
+        
+        for i=0:steps-1
+           for j = 0:steps-1
+                F(i+1,j+1,:) = RauberBeuteModell(0,[meshstep*i,meshstep*j]);
+           end 
+        end 
+
+        %%
+        %
+        % plot des Vektorfeld und der Lösungskurven 
+        %
+        %%
+        figure
+        hold on
+        quiver(x,y,F(:,:,1).',F(:,:,2).')
+        plot(sol_euler(1,:), sol_euler(2,:), 'k')
+        plot(sol_heun(1,:), sol_heun(2,:), 'g')
+        plot(sol_rk3(1,:), sol_rk3(2,:))
+        xlabel('Beute')
+        ylabel('Räuber')
+        legend('Vektorfeld', 'Euler', 'Heun', 'RK3')
+        title("Timestep: " + tau(k)+ " seconds");
+        hold off
+
+        %%
+        %
+        % plot des Beute und Räuber Verlaufs jeweils über die Zeit
+        %
+        %%
+        
+        figure 
+        time = linspace(0,T,K+1);
+        plot(time,sol_euler(1,:), 'k')
+        hold on
+        plot(time, sol_euler(2,:), 'b')
+        plot(time, sol_heun(1,:), 'g')
+        plot(time, sol_heun(2,:), 'm')
+        plot(time, sol_rk3(1,:), 'r')
+        plot(time, sol_rk3(2,:))
+        
+        legend('Beute Euler','Rauber Euler', 'Beute Heun', 'Rauber Heun', 'Beute RK3', 'Rauber RK3')
+        xlabel('Zeit')
+        ylabel('Bestand')
+        title("Räuber-Beute Zeitverlauf, Zeitschritt: " + tau(k) + " seconds")
+        hold off
+ end 
+
+%% 
+%
+% c) Was stellt man fest?
+% Euler diviergiert für die zwei größten Zeitschrittweiten sehr schnell. 
+% Euler zeigt wachsenden Kreise (wie in VL gezeigt)
+% Heun und RK3 sind geschlossene Kreise für genügend kleine
+% Zeitschrittweiten, also wesentlich besser als Euler!
+% Die Erkenntnisse stimmen auch mit den besseren Konsistenzordnungen von
+% Heun und RK3 überein. 
+%
+%% Aufgabe 3
+% Für Aufgabe 3 lösen wir die logistische DGL 
+%%
+
+type 'funcLogisticDGL.m'
+
+%% 
+%
+% Definiere Zeitschritte, Parameter und Startwerte
+%%
+tau_c = 1/80 * [1, 1/2, 1/8, 1/16, 1/32, 1/64, 1/128, 1/258, 1/512];
+t_0 = 0;
+T = 1; 
+alpha = 10; 
+beta = 1;
+Xi = alpha / beta; 
+p_0 = 1; 
+
+%% 
+%
+% Initialisere leere Arrays um Fehler und Zeit zu speichern
+%%
+cpuTime_euler = zeros(1,length(tau_c));
+cpuTime_heun = zeros(1,length(tau_c));
+cpuTime_rk3 = zeros(1,length(tau_c));
+maxErrors_euler = zeros(1,length(tau_c));
+maxErrors_heun = zeros(1,length(tau_c));
+maxErrors_rk3 = zeros(1,length(tau_c));
+
+%%
+%
+% Die exakte Lösung
+%%
+AnalyticSol = @(t) Xi*p_0/(p_0 + (Xi - p_0)*exp(-alpha*(t - t_0)));
+
+%%
+%
+% Schleife über alle Zeitschritte, berechne jeweils maxError und CPUTime
+%
+%%
+for i=1:length(tau_c)
+    
+        K = round(T/tau_c(i));
+        
+        % Initialisere und fülle Array, um die analytische Lösung zu speichern
+
+        AnalyticSolVal = zeros(1,K+1);
+        for j=1:K+1
+            AnalyticSolVal(j) = AnalyticSol(tau_c(i)*(j-1));
+        end 
+        
+        % Führe die Zeitmessung durch
+        tic;
+        sol_euler = explicit_euler(@funcLogisticDGL, p_0, T, tau_c(i));
+        cpuTime_euler(i) = toc;
+        
+        tic;
+        sol_heun = explicit_heun(@funcLogisticDGL, p_0, T, tau_c(i));
+        cpuTime_heun(i) = toc;
+        
+        tic;
+        sol_rk3 = explicit_runge_kutta3(@funcLogisticDGL, p_0, T, tau_c(i));
+        cpuTime_rk3(i) = toc;
+        
+        % Berechne die Fehler zu jedem Zeitpunkt und bestimme das Maximum
+        errors_euler = zeros(1,K+1); 
+        errors_heun = zeros(1,K+1);
+        errors_rk3 = zeros(1,K+1);
+        
+        for j=1:K+1
+            errors_euler(j) = abs(AnalyticSolVal(j) - sol_euler(j)); 
+            errors_heun(j) = abs(AnalyticSolVal(j) - sol_heun(j));
+            errors_rk3(j) = abs(AnalyticSolVal(j) - sol_rk3(j));
+        end 
+        
+        %größten Fehler finden
+        
+        maxErrors_euler(i) = max(errors_euler); 
+        maxErrors_heun(i) = max(errors_heun);
+        maxErrors_rk3(i) = max(errors_rk3);
+        
+
+end 
+
+%% 
+%
+% plot maxError over timestep for all three methods
+%
+%%
+figure
+loglog(tau_c,maxErrors_euler, '-o')
+hold on 
+loglog(tau_c,maxErrors_heun, '-o')
+loglog(tau_c,maxErrors_rk3, '-o')
+
+xlabel('timestep')
+ylabel('error')
+legend('Euler', 'Heun', 'RK3')
+title('error to analytic solution over timestep')
+hold off 
+
+%%
+%
+% plot MaxError over CPU Time for all three methods
+%
+%% 
+
+figure
+semilogy(cpuTime_euler, maxErrors_euler, '-o')
+hold on
+semilogy(cpuTime_heun, maxErrors_heun, '-o')
+semilogy(cpuTime_rk3, maxErrors_rk3, '-o')
+xlabel('cpuTime')
+ylabel('error')
+legend('Euler', 'Heun', 'RK3')
+title('error to analytical solution over cpu runtime')
+hold off
+
+%%
+% d) Interpretation der Ergebnisse
+% Mit größeren Zeitschrittweite wird Fehler zur analytischen Lösung bei
+% allen 3 Verfahren größer.
+% Rk3 besser als Heun besser als Euler
+% Euler ist am schnellsten, macht aber auch den größten Fehler. 
+% Heun und RK3 sind selber Laufzeit wie Euler deutlich besser im Fehler.
+% Heun und RK3 unterscheiden sind kaum beim CpuTime über Laufzeit plot. 
+%%
+   
+##### SOURCE END #####
+--></body></html>
