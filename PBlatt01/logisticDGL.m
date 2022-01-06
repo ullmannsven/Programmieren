@@ -93,7 +93,46 @@ switch choose
     ylabel('error')
     title('Heun-Verfahren: error over cpu runtime')
     
+    
+    case 3
+        
+    A = [0 0 0; 0.5 0 0; -1 2 0];
+    b = [0 1/2 1];
+    c = [1/6 2/3 1/6];
+        
+    for i=1:length(tau)
+        K = round(T/tau(i));
+
+        AnalyticSolVal = zeros(1,K+1);
+        for j=1:K+1
+            AnalyticSolVal(j) = AnalyticSol(tau(i)*(j-1));
+        end 
+
+        tic;
+        sol = explicit_runge_kutta3(@funcLogisticDGL, p_0, T, tau(i), A, b, c); 
+        cpuTime(i) = toc;
+
+        errors = zeros(1,K+1);
+        for j=1:K+1
+            errors(j) = abs(AnalyticSolVal(j) - sol(j)); 
+        end 
+
+        maxErrors(i) = max(errors); 
+    end 
+    
+    figure
+    loglog(tau,maxErrors, '-o')
+    xlabel('timestep')
+    ylabel('error')
+    title('RK3-Verfahren: error to analytic solution over timestep')
+
+    figure
+    semilogy(cpuTime, maxErrors, '-o')
+    xlabel('cpuTime')
+    ylabel('error')
+    title('RK3-Verfahren: error over cpu runtime')
+     
     otherwise  
         error('Wrong input')
-    
+   
 end 
