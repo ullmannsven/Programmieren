@@ -1,0 +1,376 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>AbgabePBlatt02_Ullmann_Stegmeyer</title><meta name="generator" content="MATLAB 9.7"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2022-01-07"><meta name="DC.source" content="AbgabePBlatt02_Ullmann_Stegmeyer.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1></h1><!--introduction--><p>Abgabe des zweiten Programmierblatts von Sven Ullmann (3467077) und Thomas Stegmeyer (3401787)</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Aufgabe 1</a></li><li><a href="#8">Aufgabe 2</a></li><li><a href="#18">Aufgabe 3</a></li></ul></div><h2 id="1">Aufgabe 1</h2><p>Die Funktionsweise von 1a) wird &uuml;ber die restlichen Aufgaben demonstriert. Die Funktion, um das Gitter zu bauen sieht wie folgt aus</p><pre class="codeinput">type <span class="string">'buildGitter.m'</span>
+</pre><pre class="codeoutput">
+function Omega = buildGitter(h)
+    knots = 3/h+1;
+    Omega = zeros(knots,knots,3);
+    counter = 1;
+    for i=1:knots
+        for j=1:knots
+            Omega(i,j,1) = (i-1)*h;
+            Omega(i,j,2) = (j-1)*h;
+            if (i-1)*h &gt; 2 &amp;&amp; (j-1)*h &lt; 1
+                Omega(i,j,1) = NaN;
+                Omega(i,j,2) = NaN;
+            elseif (i-1)*h &lt; 1 &amp;&amp; (j-1)*h &gt; 2
+                Omega(i,j,1) = NaN;
+                Omega(i,j,2) = NaN;
+            else 
+                Omega(i,j,3) = counter;
+                counter = counter + 1;
+            end 
+        end 
+    end 
+end 
+</pre><p>Wir haben uns in der Implementierung daf&uuml;r entschieden, die ausgeschnitten Ecken als NaN in der Gittermatrix Omega zu speichern. Damit ist eine Verallgemeinerung f&uuml;r Gebiete aus noch mehr zusammengesetzten W&uuml;rfel / Rechteck relativ einfach zu realisieren.</p><p>Um das Gitter zu visualisieren haben wir folgenden Routine verwendet:</p><pre class="codeinput">type <span class="string">'visualize_grid.m'</span>
+</pre><pre class="codeoutput">
+function visualize_grid(h)
+Omega = buildGitter(h);
+figure;
+plot(Omega(:,:,1),Omega(:,:,2),'r.');
+grid on
+hold on
+len = length(Omega(1,:,:));
+k = 1;
+for i=1:len
+    for j=1:len
+        if Omega(i,j,3)~=0
+            text(Omega(i,j,1),Omega(i,j,2),num2str(k),'Color','k')
+            drawnow
+            pause(1/len^2)
+            k = k + 1;
+        end 
+    end 
+end
+hold off
+end
+</pre><p>Damit sieht unser Gitter mit Gitterweite h = 1/4 wie folgt aus</p><pre class="codeinput">visualize_grid(1/4)
+</pre><img vspace="5" hspace="5" src="AbgabePBlatt02_Ullmann_Stegmeyer_01.png" alt=""> <h2 id="8">Aufgabe 2</h2><p>a) Um bei der Assemble Matrix zu unterscheiden, ob wir uns auf dem Rand des Gebietes Gebietes befinden, haben wir die umliegenden 8 Knoten betrachtet. Wenn alle acht umliegenden Knoten innerhalb des Gebiets liegen, dann haben wir &uuml;ber die Definition von f in der Aufgabenstellung die rechte Seite des LGS berechnet. Falls mind. einer der 8 umliegenden Knoten au&szlig;erhalb des Gebiets liegt, wurde der Wert 0 wie nach Dirichlet-Rand gefordert gesetzt. Auch hier ist wieder eine Verallgemeinerung f&uuml;r andere RB einfach umzusetzen.Die assemble Routine lautet damit wiefolgt:</p><pre class="codeinput">type <span class="string">'assemble1.m'</span>
+</pre><pre class="codeoutput">
+function [A,b] = assemble1(h,Omega)
+n = max(Omega(:,:,3),[],'all');
+A = sparse(n,n);
+b = zeros(n,1);
+knots = 3/h+1;
+counter1 = 1;
+for i=1:knots
+    for j=1:knots
+        counter2 = 0;
+        if Omega(i,j,3)==0
+        else 
+            A(counter1,counter1) = 4;
+            if j+1&lt;=knots &amp;&amp; Omega(i,j+1,3)~=0
+                diff = Omega(i,j,3) - Omega(i,j+1,3);
+                A(counter1,counter1-diff) = -1;
+                counter2 = counter2 + 1;
+            end 
+            if j-1&gt;0 &amp;&amp; Omega(i,j-1,3)~=0
+                diff = Omega(i,j,3) - Omega(i,j-1,3);
+                A(counter1,counter1-diff) = -1;
+                counter2 = counter2 + 1;
+            end 
+            if i+1&lt;=knots &amp;&amp; Omega(i+1,j,3)~=0
+                diff = Omega(i,j,3) - Omega(i+1,j,3);
+                A(counter1,counter1-diff) = -1;
+                counter2 = counter2 + 1;
+            end
+            if i-1&gt;0 &amp;&amp; Omega(i-1,j,3)~=0
+                diff = Omega(i,j,3) - Omega(i-1,j,3);
+                A(counter1,counter1-diff) = -1;
+                counter2 = counter2 + 1;
+            end
+            if i-1&gt;0 &amp;&amp; j-1&gt;0 &amp;&amp; Omega(i-1,j-1,3)~=0
+                counter2 = counter2 + 1;
+            end 
+            if i+1&lt;=knots &amp;&amp; j+1&lt;=knots &amp;&amp; Omega(i+1,j+1,3)~=0
+                counter2 = counter2 + 1;
+            end 
+            if i-1&gt;0 &amp;&amp; j+1&lt;=knots &amp;&amp; Omega(i-1,j+1,3)~=0
+                counter2 = counter2 + 1;
+            end 
+            if i+1&lt;=knots &amp;&amp; j-1&gt;0 &amp;&amp; Omega(i+1,j-1,3)~=0
+                counter2 = counter2 + 1;
+            end 
+            counter1 = counter1 + 1;
+        end 
+        if counter2 == 8
+            b(counter1-1,1) = f(Omega(i,j,1),Omega(i,j,2));
+        end 
+    end   
+end 
+A = (1/h^2)*A;
+end
+</pre><p>b) Um das entstanden LGS Au=b zu l&ouml;sen, verwenden wir den einfachsten, aber laut Dr. Google sehr effizieten Weg des '\'. Dementsprechend simpel sieht auch die Routine solve aus:</p><pre class="codeinput">type <span class="string">'solve.m'</span>
+</pre><pre class="codeoutput">
+function u = solve(A,b)
+    u = A\b;
+end
+
+</pre><p>c) Nun m&uuml;ssen wir nur noch die L&ouml;sung visualisieren: Wir speichern daf&uuml;r den Vektor u wieder als Matrix, und zwar so das die jeweiligen Vektoreintr&auml;ge mit der Nummerierung des Gitters &uuml;bereinstimmt. Es ergibt sich folgendes:</p><pre class="codeinput">type <span class="string">'visualize.m'</span>
+</pre><pre class="codeoutput">
+function visualize(u, Omega, h)
+len = length(Omega(1,:,:));
+U = zeros(len,len);
+k = 1;
+for i=1:len
+    for j=1:len
+        if Omega(i,j,3)==0
+        else
+            U(i,j) = u(k);
+            k = k + 1;
+        end
+    end
+end 
+figure;
+surf(Omega(:,:,1),Omega(:,:,2),U)
+title("Numerische Approximation mit Gitterweite h= " + h)
+end
+</pre><p>Die Methode ausgef&uuml;hrt wie in der Aufgabenstellung gefordert ergibt:</p><pre class="codeinput">h_c = [1/(2^2), 1/(2^4), 1/(2^6)];
+
+<span class="keyword">for</span> i = h_c
+    Omega = buildGitter(i);
+    [A,b] = assemble1(i,Omega);
+    u = solve(A,b);
+    visualize(u, Omega, i);
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="AbgabePBlatt02_Ullmann_Stegmeyer_02.png" alt=""> <img vspace="5" hspace="5" src="AbgabePBlatt02_Ullmann_Stegmeyer_03.png" alt=""> <img vspace="5" hspace="5" src="AbgabePBlatt02_Ullmann_Stegmeyer_04.png" alt=""> <img vspace="5" hspace="5" src="AbgabePBlatt02_Ullmann_Stegmeyer_05.png" alt=""> <p>Um sich plausibel zu machen, das diese Ergebnisse in der Augennorm richtig aussehen hier einmal die Analytische L&ouml;sung geplottet auf einem recht fein ausgel&ouml;sten Gitter &uuml;ber das gesamte (0,3)x(0,3) Gebiet.</p><pre class="codeinput">analytic_sol_func = @(x,y) sin(pi*x).*sin(2*pi*y);
+[X,Y] = meshgrid(0:0.02:3,0:0.02:3);
+figure;
+surf(X,Y,analytic_sol_func(X,Y))
+title(<span class="string">'Analytic Solution'</span>)
+</pre><img vspace="5" hspace="5" src="AbgabePBlatt02_Ullmann_Stegmeyer_06.png" alt=""> <p>Das sieht doch schonmal gut aus!</p><h2 id="18">Aufgabe 3</h2><p>a) Jetzt ging es um die Fehler im Vergleich zur Analytischen L&ouml;sung, welche uns als</p><pre class="codeinput">analytic_sol_func = @(x,y) sin(pi*x).*sin(2*pi*y);
+</pre><p>angegeben gegeben wurde. Um den Fehler in der L_inf Norm zu messen haben wir folgende Routine entwickelt:</p><pre class="codeinput">type <span class="string">'infty_error.m'</span>
+</pre><pre class="codeoutput">
+function error = infty_error(u, Omega)
+len = length(Omega(1,:,:));
+n = max(Omega(:,:,3),[],'all');
+analytic_sol_func = @(x,y) sin(pi*x).*sin(2*pi*y);
+analytic_sol = zeros(n,1);
+k = 1;
+for i=1:len
+    for j=1:len
+        if Omega(i,j,3)~=0
+            analytic_sol(k) = analytic_sol_func(Omega(i,j,1),Omega(i,j,2));
+            k = k+1;
+        end
+    end 
+end
+error = max(u - analytic_sol);
+end
+
+</pre><p>b) Um die Konvergenzordnung 2 auch numerisch Nachzuweisen, haben wir die diese Fehler f&uuml;r einige Gitterweite in einem loglog Plot dargestellt. Daf&uuml;r verwenden wir die Methode</p><pre class="codeinput">type <span class="string">'convergence.m'</span>
+</pre><pre class="codeoutput">
+function error_list = convergence()
+ h = [1/4,1/8,1/16,1/32,1/64];
+ error_list = zeros(length(h),1);
+ for i=1:length(h)
+     Omega = buildGitter(h(i));
+     [A, b] = assemble1(h(i), Omega);
+     u = solve(A,b);
+     error_list(i,1) = infty_error(u,Omega);
+ end 
+ loglog(h,error_list)
+ grid on
+ title('$ L_{inf}$ Fehler ueber Gitterweite', 'interpreter', 'latex')
+ xlabel("Gitterweite h")
+ ylabel('$ L_{inf}$ Fehler','interpreter', 'latex')
+end
+</pre><p>Angewendet ergibt sich damit folgendes Bildchen:</p><pre class="codeinput">error_list = convergence()
+</pre><pre class="codeoutput">
+error_list =
+
+    0.6639
+    0.5343
+    0.3262
+    0.1792
+    0.0938
+
+</pre><img vspace="5" hspace="5" src="AbgabePBlatt02_Ullmann_Stegmeyer_07.png" alt=""> <p>Quadratischer Fehlerabfall ist hier leider nicht unbedingt zu erkennen, schade :(</p><p class="footer"><br><a href="https://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2019b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%%
+% Abgabe des zweiten Programmierblatts von Sven Ullmann (3467077) und
+% Thomas Stegmeyer (3401787) 
+%% Aufgabe 1
+%
+% Die Funktionsweise von 1a) wird über die restlichen Aufgaben
+% demonstriert. Die Funktion, um das Gitter zu bauen sieht wie folgt aus
+%
+%%
+
+type 'buildGitter.m'
+
+%%
+% Wir haben uns in der Implementierung dafür entschieden, die ausgeschnitten
+% Ecken als NaN in der Gittermatrix Omega zu speichern. Damit ist eine
+% Verallgemeinerung für Gebiete aus noch mehr zusammengesetzten Würfel /
+% Rechteck relativ einfach zu realisieren. 
+%%
+% Um das Gitter zu visualisieren haben wir folgenden Routine verwendet:
+%%
+
+type 'visualize_grid.m'
+
+%%
+% Damit sieht unser Gitter mit Gitterweite h = 1/4 wie folgt aus
+%%
+
+visualize_grid(1/4)
+
+%% Aufgabe 2
+% a) Um bei der Assemble Matrix zu unterscheiden, ob wir uns auf dem Rand des
+% Gebietes Gebietes befinden, haben wir die umliegenden 8 Knoten
+% betrachtet. Wenn alle acht umliegenden Knoten innerhalb des Gebiets liegen, 
+% dann haben wir über die Definition von f in der Aufgabenstellung die
+% rechte Seite des LGS berechnet. Falls mind. einer der 8 umliegenden
+% Knoten außerhalb des Gebiets liegt, wurde der Wert 0 wie nach
+% Dirichlet-Rand gefordert gesetzt. Auch hier ist wieder eine
+% Verallgemeinerung für andere RB einfach umzusetzen.Die assemble Routine
+% lautet damit wiefolgt: 
+%%
+
+type 'assemble1.m' 
+
+%%
+% b) Um das entstanden LGS Au=b zu lösen, verwenden wir den einfachsten,
+% aber laut Dr. Google sehr effizieten Weg des '\'. Dementsprechend simpel
+% sieht auch die Routine solve aus:
+%%
+
+type 'solve.m'
+
+%%
+% c) Nun müssen wir nur noch die Lösung visualisieren: Wir speichern dafür
+% den Vektor u wieder als Matrix, und zwar so das die jeweiligen
+% Vektoreinträge mit der Nummerierung des Gitters übereinstimmt. Es ergibt
+% sich folgendes: 
+%%
+
+type 'visualize.m' 
+
+%%
+% Die Methode ausgeführt wie in der Aufgabenstellung gefordert ergibt: 
+%%
+
+h_c = [1/(2^2), 1/(2^4), 1/(2^6)];
+
+for i = h_c
+    Omega = buildGitter(i);
+    [A,b] = assemble1(i,Omega);
+    u = solve(A,b);
+    visualize(u, Omega, i);
+end 
+
+%% 
+% Um sich plausibel zu machen, das diese Ergebnisse in der Augennorm
+% richtig aussehen hier einmal die Analytische Lösung geplottet auf einem recht fein
+% ausgelösten Gitter über das gesamte (0,3)x(0,3) Gebiet. 
+
+analytic_sol_func = @(x,y) sin(pi*x).*sin(2*pi*y);
+[X,Y] = meshgrid(0:0.02:3,0:0.02:3);
+figure;
+surf(X,Y,analytic_sol_func(X,Y))
+title('Analytic Solution')
+
+%%
+% Das sieht doch schonmal gut aus!
+
+
+%% Aufgabe 3
+% a) Jetzt ging es um die Fehler im Vergleich zur Analytischen Lösung, welche
+% uns als 
+
+%%
+
+analytic_sol_func = @(x,y) sin(pi*x).*sin(2*pi*y);
+
+%%
+% angegeben gegeben wurde. Um den Fehler in der L_inf Norm zu messen haben
+% wir folgende Routine entwickelt:
+%%
+type 'infty_error.m' 
+
+%%
+% b) Um die Konvergenzordnung 2 auch numerisch Nachzuweisen, haben wir die
+% diese Fehler für einige Gitterweite in einem loglog Plot dargestellt.
+% Dafür verwenden wir die Methode 
+%%
+type 'convergence.m' 
+
+%% 
+% Angewendet ergibt sich damit folgendes Bildchen: 
+%%
+
+error_list = convergence()
+
+%%
+% Quadratischer Fehlerabfall ist hier leider nicht unbedingt zu erkennen,
+% schade :( 
+##### SOURCE END #####
+--></body></html>
